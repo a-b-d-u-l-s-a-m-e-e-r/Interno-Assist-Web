@@ -1,28 +1,48 @@
 {
-    "manifest_version":3,
-    "name":"Interno-Assist",
-    "version":"1.0.0",
-    "description":"AI-Assistent",
-    "permissions":[
+    "manifest_version": 3,
+
+    "name": "Interno-Assist",
+
+    "version": "1.0.0",
+
+    "description": "AI Assistant",
+
+    "permissions": [
         "activeTab",
         "storage",
         "sidePanel",
         "scripting"
     ],
-    "action":{
-        "default_title":"Interno-Assist"
+
+    "action": {
+        "default_title": "Interno-Assist"
     },
-    "side_panel":{
-        "default_path":"sidepanel.html"
+
+    "side_panel": {
+        "default_path": "sidepanel.html"
     },
-    "background":{
-        "service_worker":"background.js"
+
+    "background": {
+        "service_worker": "background.js"
     },
-    "host_permissions":[
+
+    "host_permissions": [
         "http://localhost:8080/*",
         "<all_urls>"
     ],
-    "content_security_policy":{
-        "extension_pages":"script-src 'self'; object-src 'self'"
+
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
     }
 }

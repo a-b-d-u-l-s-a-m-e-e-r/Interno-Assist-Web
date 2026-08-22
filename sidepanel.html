@@ -1,27 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Research Assistant</title>
-    <link rel="stylesheet" href="sidepanel.css">
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Interno-Assist</title>
+
+    <link rel="stylesheet"
+          href="sidepanel.css">
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>Research Assistant</h2>
-        </div>
 
-        <div class="actions">
-            <button id="summarizeBtn">Summarize</button>
-        </div>
+<div class="container">
 
-        <div class="notes">
-            <h3>Research Notes</h3>
-            <textarea id="notes" placeholder="Take notes here"></textarea>
-            <button id="saveNotesBtn">Save Notes</button>
-        </div>
+    <!-- ================= HEADER ================= -->
 
-        <div id="results"></div>
+    <div class="header">
+
+        <h2>Interno-Assist</h2>
+
     </div>
-    <script src="sidepanel.js"></script>
+
+
+    <!-- ================= SELECTED TEXT ================= -->
+
+    <div class="section">
+
+        <label for="selectedText">
+            Selected Text
+        </label>
+
+        <textarea
+            id="selectedText"
+            placeholder="Select text from a webpage..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- ================= ACTION ================= -->
+
+    <div class="section">
+
+        <label for="actionSelect">
+            Action
+        </label>
+
+        <div class="action-section">
+
+            <select id="actionSelect">
+
+                <option value="summarize">
+                    Summarize
+                </option>
+
+                <option value="suggest">
+                    Suggest
+                </option>
+
+                <option value="rewrite">
+                    Rewrite
+                </option>
+
+                <option value="grammar">
+                    Grammar
+                </option>
+
+                <option value="explain">
+                    Explain
+                </option>
+
+                <option value="improve">
+                    Improve
+                </option>
+
+                <option value="simplify">
+                    Simplify
+                </option>
+
+            </select>
+
+
+            <button
+                id="submitBtn"
+                title="Process text"
+            >
+                ➤
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= AI RESPONSE ================= -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h3>AI Response</h3>
+
+        </div>
+
+
+        <div id="results">
+
+            <div class="empty-result">
+                Your AI response will appear here.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= RESEARCH NOTES ================= -->
+
+    <div class="notes-section">
+
+        <div class="section-header">
+
+            <h3>Research Notes</h3>
+
+        </div>
+
+
+        <textarea
+            id="notes"
+            placeholder="Write your research notes here..."
+        ></textarea>
+
+
+        <button id="saveNotesBtn">
+            Save Notes
+        </button>
+
+    </div>
+
+
+    <!-- ================= SAVED NOTES ================= -->
+
+    <div class="saved-section">
+
+        <div class="section-header">
+
+            <h3>Saved Notes</h3>
+
+            <button
+                id="clearNotesBtn"
+                class="clear-button"
+            >
+                Clear All
+            </button>
+
+        </div>
+
+
+        <div id="savedNotesList">
+
+            <div class="empty-result">
+                No saved notes yet.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="sidepanel.js"></script>
+
 </body>
+
 </html>

@@ -1,70 +1,827 @@
-body {
-    margin: 0;
-    padding: 15px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* =====================================================
+   GLOBAL
+   ===================================================== */
+
+* {
+    box-sizing: border-box;
 }
+
+
+body {
+
+    margin: 0;
+
+    padding: 16px;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+   ===================================================== */
 
 .container {
+
     display: flex;
+
     flex-direction: column;
-    gap: 20px;
+
+    gap: 18px;
 }
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
 
 .header {
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+
+    padding-bottom: 12px;
+
+    border-bottom:
+        1px solid #e5e7eb;
 }
 
+
 .header h2 {
-    margin: 0px;
+
+    margin: 0;
+
+    color: #1a73e8;
+
+    font-size: 21px;
+
+    font-weight: 600;
+
+    letter-spacing: -0.2px;
+}
+
+
+/* =====================================================
+   SECTIONS
+   ===================================================== */
+
+.section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.section label {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+/* =====================================================
+   TEXTAREAS
+   ===================================================== */
+
+textarea {
+
+    width: 100%;
+
+    min-height: 130px;
+
+    padding:
+        11px 12px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+
+    resize: vertical;
+
+    outline: none;
+}
+
+
+textarea::placeholder {
+
+    color: #9ca3af;
+}
+
+
+textarea:focus {
+
+    border-color: #1a73e8;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(26, 115, 232, 0.12);
+}
+
+
+/* =====================================================
+   ACTION SECTION
+   ===================================================== */
+
+.action-section {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+#actionSelect {
+
+    flex: 1;
+
+    height: 38px;
+
+    padding:
+        0 10px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    outline: none;
+}
+
+
+#actionSelect:focus {
+
+    border-color: #1a73e8;
+}
+
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+button {
+
+    border: none;
+
+    border-radius: 6px;
+
+    padding:
+        8px 12px;
+
+    background: #1a73e8;
+
+    color: #ffffff;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease;
+}
+
+
+button:hover {
+
+    background: #1557b0;
+}
+
+
+button:disabled {
+
+    background: #9ca3af;
+
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   SUBMIT BUTTON
+   ===================================================== */
+
+#submitBtn {
+
+    width: 42px;
+
+    height: 38px;
+
+    padding: 0;
+
+    border-radius: 7px;
+
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   SECTION HEADER
+   ===================================================== */
+
+.section-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.section-header h3 {
+
+    margin: 0;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #202124;
+}
+
+
+/* =====================================================
+   AI RESPONSE
+   ===================================================== */
+
+#results {
+
+    padding: 14px;
+
+    background: #f8f9fa;
+
+    border:
+        1px solid #eef0f2;
+
+    border-radius: 9px;
+
+    min-height: 65px;
+}
+
+
+/* =====================================================
+   RESPONSE / NOTE COMMON TYPOGRAPHY
+   ===================================================== */
+
+.result-content,
+.saved-note-content {
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.65;
+
+    color: #202124;
+
+    word-wrap: break-word;
+
+    overflow-wrap: break-word;
+}
+
+
+/* =====================================================
+   PARAGRAPHS
+   ===================================================== */
+
+.result-content p,
+.saved-note-content p {
+
+    margin:
+        0 0 12px 0;
+}
+
+
+.result-content p:last-child,
+.saved-note-content p:last-child {
+
+    margin-bottom: 0;
+}
+
+
+/* =====================================================
+   HEADINGS
+   ===================================================== */
+
+.result-content h2,
+.saved-note-content h2 {
+
+    margin:
+        4px 0 10px 0;
+
+    font-size: 18px;
+
+    line-height: 1.35;
+
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.result-content h3,
+.saved-note-content h3 {
+
+    margin:
+        14px 0 8px 0;
+
+    font-size: 16px;
+
+    line-height: 1.4;
+
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.result-content h4,
+.saved-note-content h4 {
+
+    margin:
+        12px 0 7px 0;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    font-weight: 600;
+
+    color: #111827;
+}
+
+
+/* =====================================================
+   BOLD / ITALIC
+   ===================================================== */
+
+.result-content strong,
+.saved-note-content strong {
+
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.result-content em,
+.saved-note-content em {
+
+    color: #374151;
+}
+
+
+/* =====================================================
+   BULLET LIST
+   ===================================================== */
+
+.result-content ul,
+.saved-note-content ul {
+
+    margin:
+        8px 0 14px 0;
+
+    padding-left: 24px;
+
+    list-style-type: disc;
+}
+
+
+.result-content ul li,
+.saved-note-content ul li {
+
+    margin-bottom: 6px;
+
+    padding-left: 3px;
+
+    line-height: 1.55;
+}
+
+
+.result-content ul li::marker,
+.saved-note-content ul li::marker {
+
     color: #1a73e8;
 }
 
-.actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+
+/* =====================================================
+   NUMBERED LIST
+   ===================================================== */
+
+.result-content ol,
+.saved-note-content ol {
+
+    margin:
+        8px 0 14px 0;
+
+    padding-left: 26px;
+
+    list-style-type: decimal;
 }
 
-button {
-    padding: 8px 16px;
-    background-color: #1a73e8;
-    color: white;
-    border: none;
+
+.result-content ol li,
+.saved-note-content ol li {
+
+    margin-bottom: 6px;
+
+    padding-left: 3px;
+
+    line-height: 1.55;
+}
+
+
+.result-content ol li::marker,
+.saved-note-content ol li::marker {
+
+    color: #1a73e8;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   INLINE CODE
+   ===================================================== */
+
+.result-content code,
+.saved-note-content code {
+
+    padding:
+        2px 5px;
+
+    background: #eef1f5;
+
+    color: #c7254e;
+
     border-radius: 4px;
-    cursor: pointer;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 13px;
 }
 
-button:hover {
-    background-color: #1557b0;
-}
 
-.notes textarea {
-    width: 100%;
-    height: 200px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
-    margin-bottom: 10px;
-}
+/* =====================================================
+   CODE BLOCK
+   ===================================================== */
 
-#results {
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    margin-top: 20px;
-}
+.result-content .code-block,
+.saved-note-content .code-block {
 
-.result-item {
-    background: white;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
+    margin:
+        10px 0 14px 0;
 
-.result-content {
-    margin-bottom: 10px;
+    padding: 12px;
+
+    background: #1e1e1e;
+
+    color: #f8f8f2;
+
+    border-radius: 7px;
+
+    overflow-x: auto;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+
     line-height: 1.5;
+}
+
+
+.result-content .code-block code,
+.saved-note-content .code-block code {
+
+    padding: 0;
+
+    background: transparent;
+
+    color: #f8f8f2;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   RESULT ACTIONS
+   ===================================================== */
+
+.result-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 14px;
+
+    padding-top: 11px;
+
+    border-top:
+        1px solid #e5e7eb;
+}
+
+
+.result-actions button {
+
+    padding:
+        7px 12px;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   TRANSLATION PANEL
+   ===================================================== */
+
+.translation-panel {
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 10px;
+
+    padding: 10px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+.translation-title {
+
+    width: 100%;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+#translationLanguage {
+
+    flex: 1;
+
+    min-width: 130px;
+
+    height: 34px;
+
+    padding:
+        0 8px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-size: 13px;
+
+    outline: none;
+}
+
+
+#translationLanguage:focus {
+
+    border-color: #1a73e8;
+}
+
+
+.translation-panel button {
+
+    height: 34px;
+
+    padding:
+        6px 12px;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   RESEARCH NOTES
+   ===================================================== */
+
+.notes-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.notes-section textarea {
+
+    min-height: 120px;
+}
+
+
+/* =====================================================
+   CLEAR BUTTON
+   ===================================================== */
+
+.clear-button {
+
+    background: #6b7280;
+
+    font-size: 11px;
+
+    padding:
+        6px 9px;
+}
+
+
+.clear-button:hover {
+
+    background: #4b5563;
+}
+
+
+/* =====================================================
+   SAVED NOTES
+   ===================================================== */
+
+.saved-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.saved-note {
+
+    position: relative;
+
+    padding: 12px;
+
+    margin-bottom: 10px;
+
+    background: #f8f9fa;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+/*
+ * Important:
+ * Saved notes now behave visually
+ * like the AI response.
+ */
+
+.saved-note-content {
+
+    padding-right: 60px;
+}
+
+
+/* =====================================================
+   SAVED NOTE DATE
+   ===================================================== */
+
+.saved-note-date {
+
+    margin-top: 10px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   DELETE NOTE
+   ===================================================== */
+
+.delete-note {
+
+    position: absolute;
+
+    top: 8px;
+
+    right: 8px;
+
+    padding:
+        5px 8px;
+
+    background: #dc2626;
+
+    font-size: 11px;
+}
+
+
+.delete-note:hover {
+
+    background: #b91c1c;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.empty-result {
+
+    padding: 15px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    text-align: center;
 }
