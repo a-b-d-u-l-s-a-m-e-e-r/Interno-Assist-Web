@@ -1,6 +1,82 @@
+// =====================================================
+// INTERNO-ASSIST SIDE PANEL
+// =====================================================
+
 let latestAIResponse = "";
 
 let currentSelectedText = "";
+
+let currentSourceUrl = null;
+
+
+// =====================================================
+// API URL
+// =====================================================
+
+const API_URL =
+    "http://localhost:8080/api/assist/process";
+
+const DOWNLOAD_PDF_API_URL =
+    "http://localhost:8080/api/assist/download";
+
+
+// =====================================================
+// TOP TRANSLATION LANGUAGES
+// =====================================================
+
+const TRANSLATION_LANGUAGES = [
+
+    {
+        name: "English",
+        value: "English"
+    },
+
+    {
+        name: "Hindi",
+        value: "Hindi"
+    },
+
+    {
+        name: "Marathi",
+        value: "Marathi"
+    },
+
+    {
+        name: "Spanish",
+        value: "Spanish"
+    },
+
+    {
+        name: "French",
+        value: "French"
+    },
+
+    {
+        name: "German",
+        value: "German"
+    },
+
+    {
+        name: "Portuguese",
+        value: "Portuguese"
+    },
+
+    {
+        name: "Chinese",
+        value: "Chinese"
+    },
+
+    {
+        name: "Japanese",
+        value: "Japanese"
+    },
+
+    {
+        name: "Arabic",
+        value: "Arabic"
+    }
+
+];
 
 
 // =====================================================
@@ -35,16 +111,31 @@ document.addEventListener(
             );
 
 
+        // -------------------------------------------------
+        // DOWNLOAD ALL NOTES
+        // -------------------------------------------------
+
+        document
+            .getElementById("downloadNotesBtn")
+            .addEventListener(
+                "click",
+                downloadNotesAsPdf
+            );
+
+
         await loadNotes();
 
         await loadSelectedText();
 
 
-        // Listen for selected text from content.js
+        // -------------------------------------------------
+        // Listen for selected text changes
+        // -------------------------------------------------
 
         chrome.storage.onChanged.addListener(
             handleStorageChange
         );
+
     }
 );
 
@@ -63,33 +154,71 @@ function handleStorageChange(
     }
 
 
+    // -------------------------------------------------
+    // Selected text changed
+    // -------------------------------------------------
+
     if (changes.selectedText) {
 
         const selectedText =
-            changes.selectedText.newValue || "";
+            changes.selectedText.newValue;
 
 
-        if (!selectedText) {
-            return;
+        if (
+            typeof selectedText === "string" &&
+            selectedText
+        ) {
+
+            currentSelectedText =
+                selectedText;
+
+
+            const textElement =
+                document.getElementById(
+                    "selectedText"
+                );
+
+
+            if (textElement) {
+
+                textElement.value =
+                    selectedText;
+
+            }
+
         }
 
-
-        currentSelectedText =
-            selectedText;
+    }
 
 
-        const textElement =
-            document.getElementById(
-                "selectedText"
+    // -------------------------------------------------
+    // Source URL changed
+    // -------------------------------------------------
+
+    if (changes.selectedSourceUrl) {
+
+        const sourceUrl =
+            changes.selectedSourceUrl.newValue;
+
+
+        if (
+            typeof sourceUrl === "string" &&
+            sourceUrl
+        ) {
+
+            currentSourceUrl =
+                sourceUrl;
+
+
+            console.log(
+                "Current source URL updated:",
+                currentSourceUrl
             );
 
-
-        if (textElement) {
-
-            textElement.value =
-                selectedText;
         }
+
     }
+
 }
 
 
@@ -102,35 +231,69 @@ async function loadSelectedText() {
     try {
 
         const data =
-            await chrome.storage.local.get(
-                ["selectedText"]
-            );
+            await chrome.storage.local.get([
+                "selectedText",
+                "selectedSourceUrl"
+            ]);
 
+
+        // -------------------------------------------------
+        // Load selected text
+        // -------------------------------------------------
 
         const selectedText =
             data.selectedText || "";
 
 
-        if (!selectedText) {
-            return;
-        }
+        if (selectedText) {
 
-
-        currentSelectedText =
-            selectedText;
-
-
-        const textElement =
-            document.getElementById(
-                "selectedText"
-            );
-
-
-        if (textElement) {
-
-            textElement.value =
+            currentSelectedText =
                 selectedText;
+
+
+            const textElement =
+                document.getElementById(
+                    "selectedText"
+                );
+
+
+            if (textElement) {
+
+                textElement.value =
+                    selectedText;
+
+            }
+
         }
+
+
+        // -------------------------------------------------
+        // Load source URL
+        // -------------------------------------------------
+
+        const sourceUrl =
+            data.selectedSourceUrl || null;
+
+
+        if (sourceUrl) {
+
+            currentSourceUrl =
+                sourceUrl;
+
+        }
+
+
+        console.log(
+            "Loaded selected text:",
+            currentSelectedText
+        );
+
+
+        console.log(
+            "Loaded source URL:",
+            currentSourceUrl
+        );
+
 
     } catch (error) {
 
@@ -138,7 +301,9 @@ async function loadSelectedText() {
             "Unable to load selected text:",
             error
         );
+
     }
+
 }
 
 
@@ -171,6 +336,7 @@ async function processText() {
         );
 
         return;
+
     }
 
 
@@ -196,14 +362,16 @@ async function processText() {
 
         const response =
             await fetch(
-                "http://localhost:8080/api/assist/process",
+                API_URL,
                 {
 
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body: JSON.stringify({
@@ -213,6 +381,7 @@ async function processText() {
                         operation: action
 
                     })
+
                 }
             );
 
@@ -222,6 +391,7 @@ async function processText() {
             throw new Error(
                 `API Error: ${response.status}`
             );
+
         }
 
 
@@ -254,7 +424,9 @@ async function processText() {
     } finally {
 
         submitBtn.disabled = false;
+
     }
+
 }
 
 
@@ -283,9 +455,20 @@ function showResult(content) {
         "result-content";
 
 
-    if (
+    const isProcessing =
         content === "Processing..." ||
-        content.startsWith("Unable to")
+        content === "Translating...";
+
+
+    const isError =
+        content.startsWith(
+            "Unable to"
+        );
+
+
+    if (
+        isProcessing ||
+        isError
     ) {
 
         resultItem.textContent =
@@ -294,7 +477,10 @@ function showResult(content) {
     } else {
 
         resultItem.innerHTML =
-            markdownToHtml(content);
+            markdownToHtml(
+                content
+            );
+
     }
 
 
@@ -303,19 +489,22 @@ function showResult(content) {
     );
 
 
-    // Do not display buttons for processing/error
+    // -------------------------------------------------
+    // Don't show action buttons during processing/error
+    // -------------------------------------------------
 
     if (
-        content === "Processing..." ||
-        content.startsWith("Unable to")
+        isProcessing ||
+        isError
     ) {
 
         return;
+
     }
 
 
     // =================================================
-    // RESULT ACTION BUTTONS
+    // RESULT ACTIONS
     // =================================================
 
     const actions =
@@ -328,7 +517,9 @@ function showResult(content) {
         "result-actions";
 
 
+    // =================================================
     // COPY BUTTON
+    // =================================================
 
     const copyButton =
         document.createElement(
@@ -340,31 +531,19 @@ function showResult(content) {
         "Copy";
 
 
+    copyButton.title =
+        "Copy response";
+
+
     copyButton.addEventListener(
         "click",
         () => copyResponse(content)
     );
 
 
-    // MOVE TO NOTES
-
-    const moveToNotesButton =
-        document.createElement(
-            "button"
-        );
-
-
-    moveToNotesButton.textContent =
-        "Move to Notes";
-
-
-    moveToNotesButton.addEventListener(
-        "click",
-        () => moveResponseToNotes(content)
-    );
-
-
+    // =================================================
     // TRANSLATE BUTTON
+    // =================================================
 
     const translateButton =
         document.createElement(
@@ -376,19 +555,52 @@ function showResult(content) {
         "Translate";
 
 
+    translateButton.title =
+        "Translate response";
+
+
     translateButton.addEventListener(
         "click",
-        () => showTranslationLanguages(content)
+        () =>
+            showTranslationLanguages(
+                content
+            )
     );
 
+
+    // =================================================
+    // MOVE TO NOTES
+    // =================================================
+
+    const moveToNotesButton =
+        document.createElement(
+            "button"
+        );
+
+
+    moveToNotesButton.textContent =
+        "Move to Notes";
+
+
+    moveToNotesButton.title =
+        "Move response to research notes";
+
+
+    moveToNotesButton.addEventListener(
+        "click",
+        () =>
+            moveResponseToNotes(
+                content
+            )
+    );
+
+
+    // -------------------------------------------------
+    // Button order
+    // -------------------------------------------------
 
     actions.appendChild(
         copyButton
-    );
-
-
-    actions.appendChild(
-        moveToNotesButton
     );
 
 
@@ -397,25 +609,31 @@ function showResult(content) {
     );
 
 
+    actions.appendChild(
+        moveToNotesButton
+    );
+
+
     results.appendChild(
         actions
     );
+
 }
 
 
 // =====================================================
-// TRANSLATION LANGUAGES
+// TRANSLATION LANGUAGE PANEL
 // =====================================================
 
-function showTranslationLanguages(content) {
+function showTranslationLanguages(
+    content
+) {
 
     const results =
         document.getElementById(
             "results"
         );
 
-
-    // Remove previous language selector
 
     const existing =
         document.getElementById(
@@ -442,6 +660,10 @@ function showTranslationLanguages(content) {
         "translation-panel";
 
 
+    // =================================================
+    // TITLE
+    // =================================================
+
     const title =
         document.createElement(
             "div"
@@ -456,6 +678,10 @@ function showTranslationLanguages(content) {
         "Translate to";
 
 
+    // =================================================
+    // LANGUAGE SELECT
+    // =================================================
+
     const languageSelect =
         document.createElement(
             "select"
@@ -466,62 +692,7 @@ function showTranslationLanguages(content) {
         "translationLanguage";
 
 
-    const languages = [
-
-        {
-            name: "English",
-            value: "English"
-        },
-
-        {
-            name: "Hindi",
-            value: "Hindi"
-        },
-
-        {
-            name: "Marathi",
-            value: "Marathi"
-        },
-
-        {
-            name: "Spanish",
-            value: "Spanish"
-        },
-
-        {
-            name: "French",
-            value: "French"
-        },
-
-        {
-            name: "German",
-            value: "German"
-        },
-
-        {
-            name: "Portuguese",
-            value: "Portuguese"
-        },
-
-        {
-            name: "Chinese",
-            value: "Chinese"
-        },
-
-        {
-            name: "Japanese",
-            value: "Japanese"
-        },
-
-        {
-            name: "Arabic",
-            value: "Arabic"
-        }
-
-    ];
-
-
-    languages.forEach(
+    TRANSLATION_LANGUAGES.forEach(
         language => {
 
             const option =
@@ -541,9 +712,14 @@ function showTranslationLanguages(content) {
             languageSelect.appendChild(
                 option
             );
+
         }
     );
 
+
+    // =================================================
+    // TRANSLATE NOW
+    // =================================================
 
     const translateNowButton =
         document.createElement(
@@ -567,6 +743,31 @@ function showTranslationLanguages(content) {
                 content,
                 language
             );
+
+        }
+    );
+
+
+    // =================================================
+    // CLOSE BUTTON
+    // =================================================
+
+    const closeButton =
+        document.createElement(
+            "button"
+        );
+
+
+    closeButton.textContent =
+        "Cancel";
+
+
+    closeButton.addEventListener(
+        "click",
+        () => {
+
+            translationPanel.remove();
+
         }
     );
 
@@ -586,9 +787,15 @@ function showTranslationLanguages(content) {
     );
 
 
+    translationPanel.appendChild(
+        closeButton
+    );
+
+
     results.appendChild(
         translationPanel
     );
+
 }
 
 
@@ -600,12 +807,6 @@ async function translateResponse(
     content,
     language
 ) {
-
-    const results =
-        document.getElementById(
-            "results"
-        );
-
 
     const translationPanel =
         document.getElementById(
@@ -631,7 +832,7 @@ async function translateResponse(
 
         const response =
             await fetch(
-                "http://localhost:8080/api/assist/process",
+                API_URL,
                 {
 
                     method: "POST",
@@ -645,16 +846,14 @@ async function translateResponse(
 
                     body: JSON.stringify({
 
-                        content:
-                            content,
+                        content: content,
 
-                        operation:
-                            "translate",
+                        operation: "translate",
 
-                        language:
-                            language
+                        language: language
 
                     })
+
                 }
             );
 
@@ -664,6 +863,7 @@ async function translateResponse(
             throw new Error(
                 `Translation API Error: ${response.status}`
             );
+
         }
 
 
@@ -696,7 +896,739 @@ async function translateResponse(
             "Unable to translate your response.\n\n" +
             error.message
         );
+
     }
+
+}
+
+
+// =====================================================
+// MOVE RESPONSE TO NOTES
+// =====================================================
+
+function moveResponseToNotes(
+    content
+) {
+
+    const notesElement =
+        document.getElementById(
+            "notes"
+        );
+
+
+    if (!notesElement) {
+
+        console.error(
+            "Research Notes textarea not found."
+        );
+
+        return;
+
+    }
+
+
+    notesElement.value =
+        content;
+
+
+    notesElement.scrollIntoView({
+
+        behavior: "smooth",
+
+        block: "center"
+
+    });
+
+
+    setTimeout(
+        () => {
+
+            notesElement.focus();
+
+        },
+        300
+    );
+
+}
+
+
+// =====================================================
+// SAVE MANUAL NOTES
+// =====================================================
+
+async function saveNotes() {
+
+    const notesElement =
+        document.getElementById(
+            "notes"
+        );
+
+
+    const notes =
+        notesElement.value.trim();
+
+
+    if (!notes) {
+
+        alert(
+            "Please enter some notes."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        // =================================================
+        // IMPORTANT
+        // =================================================
+        //
+        // DO NOT DO THIS:
+        //
+        // source: window.location.href
+        //
+        // because the side panel may currently be associated
+        // with another webpage.
+        //
+        // Instead use currentSourceUrl, which was captured
+        // when the text was originally selected.
+        //
+        // =================================================
+
+
+        const data =
+            await chrome.storage.local.get([
+                "researchNotesList",
+                "selectedSourceUrl"
+            ]);
+
+
+        const savedNotes =
+            data.researchNotesList || [];
+
+
+        // -------------------------------------------------
+        // Use current source URL.
+        //
+        // Fallback to storage in case the side panel was
+        // opened/reloaded.
+        // -------------------------------------------------
+
+        const sourceUrl =
+            currentSourceUrl ||
+            data.selectedSourceUrl ||
+            null;
+
+
+        savedNotes.push({
+
+            id: Date.now(),
+
+            type: "MANUAL_NOTE",
+
+            operation: null,
+
+            content: notes,
+
+            source: sourceUrl,
+
+            date: new Date().toLocaleString()
+
+        });
+
+
+        await chrome.storage.local.set({
+
+            researchNotesList:
+                savedNotes
+
+        });
+
+
+        console.log(
+            "Note saved with source:",
+            sourceUrl
+        );
+
+
+        notesElement.value =
+            "";
+
+
+        await loadNotes();
+
+
+        alert(
+            "Notes saved successfully."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Unable to save notes:",
+            error
+        );
+
+
+        alert(
+            "Unable to save notes."
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// LOAD SAVED NOTES
+// =====================================================
+
+async function loadNotes() {
+
+    try {
+
+        const data =
+            await chrome.storage.local.get(
+                ["researchNotesList"]
+            );
+
+
+        const notes =
+            data.researchNotesList || [];
+
+
+        const notesList =
+            document.getElementById(
+                "savedNotesList"
+            );
+
+
+        if (!notesList) {
+            return;
+        }
+
+
+        notesList.innerHTML =
+            "";
+
+
+        if (notes.length === 0) {
+
+            notesList.innerHTML = `
+                <div class="empty-result">
+                    No saved notes yet.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        notes.forEach(
+            note => {
+
+                const noteElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                noteElement.className =
+                    "saved-note";
+
+
+                // =================================================
+                // DELETE BUTTON
+                // =================================================
+
+                const deleteButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                deleteButton.className =
+                    "delete-note";
+
+
+                deleteButton.textContent =
+                    "Delete";
+
+
+                deleteButton.addEventListener(
+                    "click",
+                    () =>
+                        deleteNote(
+                            note.id
+                        )
+                );
+
+
+                // =================================================
+                // CONTENT
+                // =================================================
+
+                const content =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                content.className =
+                    "saved-note-content";
+
+
+                content.innerHTML =
+                    markdownToHtml(
+                        note.content
+                    );
+
+
+                // =================================================
+                // DATE
+                // =================================================
+
+                const date =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                date.className =
+                    "saved-note-date";
+
+
+                if (note.operation) {
+
+                    date.textContent =
+                        `${capitalize(note.operation)} • ${note.date}`;
+
+                } else {
+
+                    date.textContent =
+                        note.date;
+
+                }
+
+
+                // =================================================
+                // SOURCE
+                // =================================================
+
+                if (note.source) {
+
+                    const source =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    source.className =
+                        "saved-note-source";
+
+
+                    const sourceLabel =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    sourceLabel.textContent =
+                        "Source: ";
+
+
+                    const sourceLink =
+                        document.createElement(
+                            "a"
+                        );
+
+
+                    sourceLink.href =
+                        note.source;
+
+
+                    sourceLink.target =
+                        "_blank";
+
+
+                    sourceLink.rel =
+                        "noopener noreferrer";
+
+
+                    sourceLink.textContent =
+                        note.source;
+
+
+                    source.appendChild(
+                        sourceLabel
+                    );
+
+
+                    source.appendChild(
+                        sourceLink
+                    );
+
+
+                    noteElement.appendChild(
+                        source
+                    );
+
+                }
+
+
+                // =================================================
+                // APPEND
+                // =================================================
+
+                noteElement.appendChild(
+                    deleteButton
+                );
+
+
+                noteElement.appendChild(
+                    content
+                );
+
+
+                noteElement.appendChild(
+                    date
+                );
+
+
+                notesList.appendChild(
+                    noteElement
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load notes:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// DELETE ONE NOTE
+// =====================================================
+
+async function deleteNote(
+    id
+) {
+
+    try {
+
+        const data =
+            await chrome.storage.local.get(
+                ["researchNotesList"]
+            );
+
+
+        const notes =
+            data.researchNotesList || [];
+
+
+        const updatedNotes =
+            notes.filter(
+                note =>
+                    note.id !== id
+            );
+
+
+        await chrome.storage.local.set({
+
+            researchNotesList:
+                updatedNotes
+
+        });
+
+
+        await loadNotes();
+
+
+    } catch (error) {
+
+        console.error(
+            "Unable to delete note:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// DELETE ALL NOTES
+// =====================================================
+
+async function clearNotes() {
+
+    try {
+
+        const data =
+            await chrome.storage.local.get(
+                ["researchNotesList"]
+            );
+
+
+        const notes =
+            data.researchNotesList || [];
+
+
+        if (notes.length === 0) {
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete all saved notes?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        await chrome.storage.local.remove(
+            ["researchNotesList"]
+        );
+
+
+        await loadNotes();
+
+
+    } catch (error) {
+
+        console.error(
+            "Unable to clear notes:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// DOWNLOAD ALL NOTES AS PDF
+// =====================================================
+
+async function downloadNotesAsPdf() {
+
+    const downloadButton =
+        document.getElementById(
+            "downloadNotesBtn"
+        );
+
+
+    try {
+
+        // -------------------------------------------------
+        // Get all saved notes
+        // -------------------------------------------------
+
+        const data =
+            await chrome.storage.local.get(
+                ["researchNotesList"]
+            );
+
+
+        const notes =
+            data.researchNotesList || [];
+
+
+        // -------------------------------------------------
+        // Check notes
+        // -------------------------------------------------
+
+        if (notes.length === 0) {
+
+            alert(
+                "No saved notes available to download."
+            );
+
+            return;
+
+        }
+
+
+        // -------------------------------------------------
+        // Disable button
+        // -------------------------------------------------
+
+        downloadButton.disabled =
+            true;
+
+
+        downloadButton.textContent =
+            "Generating...";
+
+
+        // =================================================
+        // COMBINE ALL NOTES
+        // =================================================
+
+        const allNotes =
+            notes
+                .map(
+                    (note, index) => {
+
+                        return (
+
+                            `Note ${index + 1}\n` +
+
+                            `Date: ${note.date || ""}\n` +
+
+                            `Source: ${note.source || "Not available"}\n\n` +
+
+                            `${note.content || ""}`
+
+                        );
+
+                    }
+                )
+                .join(
+                    "\n\n----------------------------------------\n\n"
+                );
+
+
+        // -------------------------------------------------
+        // Send notes to backend
+        // -------------------------------------------------
+
+        const response =
+            await fetch(
+                DOWNLOAD_PDF_API_URL,
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        content:
+                            allNotes
+
+                    })
+
+                }
+            );
+
+
+        // -------------------------------------------------
+        // Check response
+        // -------------------------------------------------
+
+        if (!response.ok) {
+
+            throw new Error(
+                `PDF API Error: ${response.status}`
+            );
+
+        }
+
+
+        // -------------------------------------------------
+        // Convert response to Blob
+        // -------------------------------------------------
+
+        const blob =
+            await response.blob();
+
+
+        // -------------------------------------------------
+        // Create temporary URL
+        // -------------------------------------------------
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        // -------------------------------------------------
+        // Create download link
+        // -------------------------------------------------
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            "interno-assist-notes.pdf";
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        // -------------------------------------------------
+        // Cleanup
+        // -------------------------------------------------
+
+        link.remove();
+
+
+        URL.revokeObjectURL(
+            url
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Unable to download notes:",
+            error
+        );
+
+
+        alert(
+            "Unable to download notes as PDF.\n\n" +
+            error.message
+        );
+
+
+    } finally {
+
+        downloadButton.disabled =
+            false;
+
+
+        downloadButton.textContent =
+            "Download PDF";
+
+    }
+
 }
 
 
@@ -715,7 +1647,9 @@ function markdownToHtml(markdown) {
         escapeHtml(markdown);
 
 
+    // -------------------------------------------------
     // Code blocks
+    // -------------------------------------------------
 
     html = html.replace(
         /```([\s\S]*?)```/g,
@@ -723,7 +1657,9 @@ function markdownToHtml(markdown) {
     );
 
 
+    // -------------------------------------------------
     // Inline code
+    // -------------------------------------------------
 
     html = html.replace(
         /`([^`\n]+)`/g,
@@ -731,7 +1667,9 @@ function markdownToHtml(markdown) {
     );
 
 
+    // -------------------------------------------------
     // Bold
+    // -------------------------------------------------
 
     html = html.replace(
         /\*\*(.*?)\*\*/g,
@@ -739,15 +1677,19 @@ function markdownToHtml(markdown) {
     );
 
 
+    // -------------------------------------------------
     // Italic
+    // -------------------------------------------------
 
     html = html.replace(
-        /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
+        /(?<!\*)\*([^\*\n]+)\*(?!\*)/g,
         "<em>$1</em>"
     );
 
 
+    // -------------------------------------------------
     // Headings
+    // -------------------------------------------------
 
     html = html.replace(
         /^### (.*)$/gm,
@@ -767,7 +1709,19 @@ function markdownToHtml(markdown) {
     );
 
 
+    // -------------------------------------------------
+    // Markdown links
+    // -------------------------------------------------
+
+    html = html.replace(
+        /\[([^\]]+)\]\(([^)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+
+
+    // -------------------------------------------------
     // Numbered lists
+    // -------------------------------------------------
 
     html = html.replace(
         /(^|\n)((?:\d+\.\s+.*(?:\n|$))+)/g,
@@ -799,11 +1753,14 @@ function markdownToHtml(markdown) {
             return (
                 `${prefix}<ol>${items}</ol>`
             );
+
         }
     );
 
 
+    // -------------------------------------------------
     // Bullet lists
+    // -------------------------------------------------
 
     html = html.replace(
         /(^|\n)((?:[-*•]\s+.*(?:\n|$))+)/g,
@@ -835,11 +1792,14 @@ function markdownToHtml(markdown) {
             return (
                 `${prefix}<ul>${items}</ul>`
             );
+
         }
     );
 
 
+    // -------------------------------------------------
     // Paragraphs
+    // -------------------------------------------------
 
     html = html.replace(
         /\n{2,}/g,
@@ -853,7 +1813,9 @@ function markdownToHtml(markdown) {
         "</p>";
 
 
+    // -------------------------------------------------
     // Single line breaks
+    // -------------------------------------------------
 
     html = html.replace(
         /\n/g,
@@ -861,10 +1823,12 @@ function markdownToHtml(markdown) {
     );
 
 
-    // Remove breaks around lists/headings
+    // -------------------------------------------------
+    // Remove breaks around block elements
+    // -------------------------------------------------
 
     html = html.replace(
-        /<br>\s*(<(?:ul|ol|h2|h3|h4|pre))/g,
+        /<br>\s*(<(?:ul|ol|h2|h3|h4|pre)>)/g,
         "$1"
     );
 
@@ -875,7 +1839,9 @@ function markdownToHtml(markdown) {
     );
 
 
+    // -------------------------------------------------
     // Remove empty paragraphs
+    // -------------------------------------------------
 
     html = html.replace(
         /<p>\s*<\/p>/g,
@@ -884,6 +1850,7 @@ function markdownToHtml(markdown) {
 
 
     return html;
+
 }
 
 
@@ -904,6 +1871,7 @@ function escapeHtml(text) {
 
 
     return div.innerHTML;
+
 }
 
 
@@ -911,7 +1879,9 @@ function escapeHtml(text) {
 // COPY RESPONSE
 // =====================================================
 
-async function copyResponse(content) {
+async function copyResponse(
+    content
+) {
 
     try {
 
@@ -924,368 +1894,16 @@ async function copyResponse(content) {
             "Response copied."
         );
 
+
     } catch (error) {
 
         console.error(
             "Copy failed:",
             error
         );
-    }
-}
 
-
-// =====================================================
-// MOVE RESPONSE TO NOTES
-// =====================================================
-
-function moveResponseToNotes(content) {
-
-    const notesElement =
-        document.getElementById(
-            "notes"
-        );
-
-
-    if (!notesElement) {
-
-        console.error(
-            "Research Notes textarea not found."
-        );
-
-        return;
     }
 
-
-    notesElement.value =
-        content;
-
-
-    notesElement.scrollIntoView({
-
-        behavior: "smooth",
-
-        block: "center"
-
-    });
-
-
-    setTimeout(
-        () => {
-
-            notesElement.focus();
-
-        },
-        300
-    );
-}
-
-
-// =====================================================
-// SAVE MANUAL NOTES
-// =====================================================
-
-async function saveNotes() {
-
-    const notesElement =
-        document.getElementById(
-            "notes"
-        );
-
-
-    const notes =
-        notesElement.value.trim();
-
-
-    if (!notes) {
-
-        alert(
-            "Please enter some notes."
-        );
-
-        return;
-    }
-
-
-    try {
-
-        const data =
-            await chrome.storage.local.get(
-                ["researchNotesList"]
-            );
-
-
-        const savedNotes =
-            data.researchNotesList || [];
-
-
-        savedNotes.unshift({
-
-            id: Date.now(),
-
-            type: "MANUAL_NOTE",
-
-            operation: null,
-
-            content: notes,
-
-            source: null,
-
-            date:
-                new Date()
-                    .toLocaleString()
-        });
-
-
-        await chrome.storage.local.set({
-
-            researchNotesList:
-                savedNotes
-
-        });
-
-
-        notesElement.value =
-            "";
-
-
-        await loadNotes();
-
-
-        alert(
-            "Notes saved successfully."
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Unable to save notes:",
-            error
-        );
-
-
-        alert(
-            "Unable to save notes."
-        );
-    }
-}
-
-
-// =====================================================
-// LOAD SAVED NOTES
-// =====================================================
-
-async function loadNotes() {
-
-    const data =
-        await chrome.storage.local.get(
-            ["researchNotesList"]
-        );
-
-
-    const notes =
-        data.researchNotesList || [];
-
-
-    const notesList =
-        document.getElementById(
-            "savedNotesList"
-        );
-
-
-    notesList.innerHTML =
-        "";
-
-
-    if (notes.length === 0) {
-
-        notesList.innerHTML = `
-            <div class="empty-result">
-                No saved notes yet.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    notes.forEach(
-        note => {
-
-            const noteElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            noteElement.className =
-                "saved-note";
-
-
-            // Delete button
-
-            const deleteButton =
-                document.createElement(
-                    "button"
-                );
-
-
-            deleteButton.className =
-                "delete-note";
-
-
-            deleteButton.textContent =
-                "Delete";
-
-
-            deleteButton.addEventListener(
-                "click",
-                () =>
-                    deleteNote(note.id)
-            );
-
-
-            // Content
-
-            const content =
-                document.createElement(
-                    "div"
-                );
-
-
-            content.className =
-                "saved-note-content";
-
-
-            // IMPORTANT:
-            // Use same Markdown rendering
-            // as AI Response
-
-            content.innerHTML =
-                markdownToHtml(
-                    note.content
-                );
-
-
-            // Date
-
-            const date =
-                document.createElement(
-                    "div"
-                );
-
-
-            date.className =
-                "saved-note-date";
-
-
-            if (note.operation) {
-
-                date.textContent =
-                    `${capitalize(note.operation)} • ${note.date}`;
-
-            } else {
-
-                date.textContent =
-                    note.date;
-            }
-
-
-            noteElement.appendChild(
-                deleteButton
-            );
-
-
-            noteElement.appendChild(
-                content
-            );
-
-
-            noteElement.appendChild(
-                date
-            );
-
-
-            notesList.appendChild(
-                noteElement
-            );
-        }
-    );
-}
-
-
-// =====================================================
-// DELETE ONE NOTE
-// =====================================================
-
-async function deleteNote(id) {
-
-    const data =
-        await chrome.storage.local.get(
-            ["researchNotesList"]
-        );
-
-
-    const notes =
-        data.researchNotesList || [];
-
-
-    const updatedNotes =
-        notes.filter(
-            note =>
-                note.id !== id
-        );
-
-
-    await chrome.storage.local.set({
-
-        researchNotesList:
-            updatedNotes
-
-    });
-
-
-    await loadNotes();
-}
-
-
-// =====================================================
-// DELETE ALL NOTES
-// =====================================================
-
-async function clearNotes() {
-
-    const data =
-        await chrome.storage.local.get(
-            ["researchNotesList"]
-        );
-
-
-    const notes =
-        data.researchNotesList || [];
-
-
-    if (notes.length === 0) {
-        return;
-    }
-
-
-    const confirmed =
-        confirm(
-            "Are you sure you want to delete all saved notes?"
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    await chrome.storage.local.remove(
-        ["researchNotesList"]
-    );
-
-
-    await loadNotes();
 }
 
 
@@ -1293,7 +1911,9 @@ async function clearNotes() {
 // CAPITALIZE
 // =====================================================
 
-function capitalize(value) {
+function capitalize(
+    value
+) {
 
     if (!value) {
         return "";
@@ -1301,7 +1921,11 @@ function capitalize(value) {
 
 
     return (
+
         value.charAt(0).toUpperCase() +
+
         value.slice(1)
+
     );
+
 }

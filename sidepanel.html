@@ -2,22 +2,30 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Interno-Assist</title>
 
-    <link rel="stylesheet"
-          href="sidepanel.css">
+    <link
+        rel="stylesheet"
+        href="sidepanel.css"
+    >
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- ================= HEADER ================= -->
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
 
     <div class="header">
 
@@ -26,7 +34,9 @@
     </div>
 
 
-    <!-- ================= SELECTED TEXT ================= -->
+    <!-- ================================================= -->
+    <!-- SELECTED TEXT -->
+    <!-- ================================================= -->
 
     <div class="section">
 
@@ -42,7 +52,9 @@
     </div>
 
 
-    <!-- ================= ACTION ================= -->
+    <!-- ================================================= -->
+    <!-- ACTION -->
+    <!-- ================================================= -->
 
     <div class="section">
 
@@ -97,13 +109,17 @@
     </div>
 
 
-    <!-- ================= AI RESPONSE ================= -->
+    <!-- ================================================= -->
+    <!-- AI RESPONSE -->
+    <!-- ================================================= -->
 
     <div class="section">
 
         <div class="section-header">
 
-            <h3>AI Response</h3>
+            <h3>
+                AI Response
+            </h3>
 
         </div>
 
@@ -111,7 +127,9 @@
         <div id="results">
 
             <div class="empty-result">
+
                 Your AI response will appear here.
+
             </div>
 
         </div>
@@ -119,13 +137,17 @@
     </div>
 
 
-    <!-- ================= RESEARCH NOTES ================= -->
+    <!-- ================================================= -->
+    <!-- RESEARCH NOTES -->
+    <!-- ================================================= -->
 
     <div class="notes-section">
 
         <div class="section-header">
 
-            <h3>Research Notes</h3>
+            <h3>
+                Research Notes
+            </h3>
 
         </div>
 
@@ -137,26 +159,47 @@
 
 
         <button id="saveNotesBtn">
+
             Save Notes
+
         </button>
 
     </div>
 
 
-    <!-- ================= SAVED NOTES ================= -->
+    <!-- ================================================= -->
+    <!-- SAVED NOTES -->
+    <!-- ================================================= -->
 
     <div class="saved-section">
 
         <div class="section-header">
 
-            <h3>Saved Notes</h3>
+            <h3>
+                Saved Notes
+            </h3>
 
-            <button
-                id="clearNotesBtn"
-                class="clear-button"
-            >
-                Clear All
-            </button>
+
+            <div class="notes-actions">
+
+                <button
+                    id="downloadNotesBtn"
+                    class="download-button"
+                    title="Download all saved notes as PDF"
+                >
+                    Download PDF
+                </button>
+
+
+                <button
+                    id="clearNotesBtn"
+                    class="clear-button"
+                    title="Delete all saved notes"
+                >
+                    Clear All
+                </button>
+
+            </div>
 
         </div>
 
@@ -164,7 +207,9 @@
         <div id="savedNotesList">
 
             <div class="empty-result">
+
                 No saved notes yet.
+
             </div>
 
         </div>

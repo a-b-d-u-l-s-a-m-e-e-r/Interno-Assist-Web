@@ -5,13 +5,14 @@
 
     "version": "1.0.0",
 
-    "description": "AI Assistant",
+    "description": "AI-powered research assistant",
 
     "permissions": [
         "activeTab",
         "storage",
         "sidePanel",
-        "scripting"
+        "scripting",
+        "contextMenus"
     ],
 
     "action": {
@@ -26,11 +27,6 @@
         "service_worker": "background.js"
     },
 
-    "host_permissions": [
-        "http://localhost:8080/*",
-        "<all_urls>"
-    ],
-
     "content_scripts": [
         {
             "matches": [
@@ -38,8 +34,14 @@
             ],
             "js": [
                 "content.js"
-            ]
+            ],
+            "run_at": "document_idle"
         }
+    ],
+
+    "host_permissions": [
+        "http://localhost:8080/*",
+        "<all_urls>"
     ],
 
     "content_security_policy": {
