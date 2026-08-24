@@ -1,0 +1,1030 @@
+/* =====================================================
+   GLOBAL
+   ===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    padding: 16px;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+   ===================================================== */
+
+.container {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.header {
+    padding-bottom: 12px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+
+.header h2 {
+    margin: 0;
+
+    color: #1a73e8;
+
+    font-size: 21px;
+
+    font-weight: 600;
+
+    letter-spacing: -0.2px;
+}
+
+
+/* =====================================================
+   SECTIONS
+   ===================================================== */
+
+.section {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.section label {
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+/* =====================================================
+   TEXTAREAS
+   ===================================================== */
+
+textarea {
+    width: 100%;
+
+    min-height: 130px;
+
+    padding: 11px 12px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+
+    resize: vertical;
+
+    outline: none;
+}
+
+
+textarea::placeholder {
+    color: #9ca3af;
+}
+
+
+textarea:focus {
+    border-color: #1a73e8;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(26, 115, 232, 0.12);
+}
+
+
+/* =====================================================
+   ACTION SECTION
+   ===================================================== */
+
+.action-section {
+    display: flex;
+
+    gap: 8px;
+}
+
+
+#actionSelect {
+    flex: 1;
+
+    height: 38px;
+
+    padding:
+        0 10px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    outline: none;
+}
+
+
+#actionSelect:focus {
+    border-color: #1a73e8;
+}
+
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+button {
+    border: none;
+
+    border-radius: 6px;
+
+    padding:
+        8px 12px;
+
+    background: #1a73e8;
+
+    color: #ffffff;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease;
+}
+
+
+button:hover {
+    background: #1557b0;
+}
+
+
+button:disabled {
+    background: #9ca3af;
+
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   SUBMIT BUTTON
+   ===================================================== */
+
+#submitBtn {
+    width: 42px;
+
+    height: 38px;
+
+    padding: 0;
+
+    border-radius: 7px;
+
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   SECTION HEADERS
+   ===================================================== */
+
+.section-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.section-header h3 {
+    margin: 0;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #202124;
+}
+
+
+h3 {
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   AI RESPONSE CONTAINER
+   ===================================================== */
+
+#results {
+    padding: 14px;
+
+    background: #f8f9fa;
+
+    border:
+        1px solid #eef0f2;
+
+    border-radius: 9px;
+
+    min-height: 65px;
+}
+
+
+/* =====================================================
+   AI RESPONSE CONTENT
+   ===================================================== */
+
+.result-content {
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.65;
+
+    color: #202124;
+
+    word-wrap: break-word;
+
+    overflow-wrap: break-word;
+}
+
+
+/* =====================================================
+   PARAGRAPHS
+   ===================================================== */
+
+.result-content p {
+    margin:
+        0 0 12px 0;
+}
+
+
+.result-content p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =====================================================
+   HEADINGS
+   ===================================================== */
+
+.result-content h2 {
+    margin:
+        4px 0 10px 0;
+
+    font-size: 18px;
+
+    line-height: 1.35;
+
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.result-content h3 {
+    margin:
+        14px 0 8px 0;
+
+    font-size: 16px;
+
+    line-height: 1.4;
+
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.result-content h4 {
+    margin:
+        12px 0 7px 0;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    font-weight: 600;
+
+    color: #111827;
+}
+
+
+/* =====================================================
+   BOLD / ITALIC
+   ===================================================== */
+
+.result-content strong {
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.result-content em {
+    color: #374151;
+}
+
+
+/* =====================================================
+   BULLET LIST
+   ===================================================== */
+
+.result-content ul {
+    margin:
+        8px 0 14px 0;
+
+    padding-left: 24px;
+
+    list-style-type: disc;
+}
+
+
+.result-content ul li {
+    margin-bottom: 6px;
+
+    padding-left: 3px;
+
+    line-height: 1.55;
+}
+
+
+.result-content ul li::marker {
+    color: #1a73e8;
+
+    font-size: 0.9em;
+}
+
+
+/* =====================================================
+   NUMBERED LIST
+   ===================================================== */
+
+.result-content ol {
+    margin:
+        8px 0 14px 0;
+
+    padding-left: 26px;
+
+    list-style-type: decimal;
+}
+
+
+.result-content ol li {
+    margin-bottom: 6px;
+
+    padding-left: 3px;
+
+    line-height: 1.55;
+}
+
+
+.result-content ol li::marker {
+    color: #1a73e8;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   INLINE CODE
+   ===================================================== */
+
+.result-content code {
+    padding:
+        2px 5px;
+
+    background: #eef1f5;
+
+    color: #c7254e;
+
+    border-radius: 4px;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   CODE BLOCK
+   ===================================================== */
+
+.result-content .code-block {
+    margin:
+        10px 0 14px 0;
+
+    padding: 12px;
+
+    background: #1e1e1e;
+
+    color: #f8f8f2;
+
+    border-radius: 7px;
+
+    overflow-x: auto;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+.result-content .code-block code {
+    padding: 0;
+
+    background: transparent;
+
+    color: #f8f8f2;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   RESULT ACTIONS
+   ===================================================== */
+
+.result-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 14px;
+
+    padding-top: 11px;
+
+    border-top:
+        1px solid #e5e7eb;
+}
+
+
+.result-actions button {
+    padding:
+        7px 12px;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   TRANSLATION PANEL
+   ===================================================== */
+
+.translation-panel {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 10px;
+
+    padding: 10px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 7px;
+}
+
+
+.translation-title {
+    width: 100%;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.translation-panel select {
+    flex: 1;
+
+    min-width: 130px;
+
+    height: 34px;
+
+    padding:
+        0 8px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #202124;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 12px;
+
+    outline: none;
+}
+
+
+.translation-panel select:focus {
+    border-color: #1a73e8;
+}
+
+
+.translation-panel button {
+    height: 34px;
+
+    padding:
+        0 12px;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   RESEARCH NOTES
+   ===================================================== */
+
+.notes-section {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.notes-section textarea {
+    min-height: 120px;
+}
+
+
+/* =====================================================
+   SAVED NOTES
+   ===================================================== */
+
+.saved-section {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+/* =====================================================
+   SAVED NOTE
+   ===================================================== */
+
+.saved-note {
+    position: relative;
+
+    padding: 12px;
+
+    margin-bottom: 10px;
+
+    background: #f8f9fa;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+/* =====================================================
+   SAVED NOTE CONTENT
+
+   Uses the SAME typography as AI Response
+   ===================================================== */
+
+.saved-note-content {
+    padding-right: 60px;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.65;
+
+    color: #202124;
+
+    word-wrap: break-word;
+
+    overflow-wrap: break-word;
+}
+
+
+/* Same formatting as AI Response */
+
+.saved-note-content p {
+    margin:
+        0 0 12px 0;
+}
+
+
+.saved-note-content p:last-child {
+    margin-bottom: 0;
+}
+
+
+.saved-note-content h2 {
+    margin:
+        4px 0 10px 0;
+
+    font-size: 18px;
+
+    line-height: 1.35;
+
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.saved-note-content h3 {
+    margin:
+        14px 0 8px 0;
+
+    font-size: 16px;
+
+    line-height: 1.4;
+
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.saved-note-content h4 {
+    margin:
+        12px 0 7px 0;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    font-weight: 600;
+
+    color: #111827;
+}
+
+
+.saved-note-content strong {
+    font-weight: 650;
+
+    color: #111827;
+}
+
+
+.saved-note-content em {
+    color: #374151;
+}
+
+
+.saved-note-content ul {
+    margin:
+        8px 0 14px 0;
+
+    padding-left: 24px;
+
+    list-style-type: disc;
+}
+
+
+.saved-note-content ul li {
+    margin-bottom: 6px;
+
+    padding-left: 3px;
+
+    line-height: 1.55;
+}
+
+
+.saved-note-content ul li::marker {
+    color: #1a73e8;
+
+    font-size: 0.9em;
+}
+
+
+.saved-note-content ol {
+    margin:
+        8px 0 14px 0;
+
+    padding-left: 26px;
+
+    list-style-type: decimal;
+}
+
+
+.saved-note-content ol li {
+    margin-bottom: 6px;
+
+    padding-left: 3px;
+
+    line-height: 1.55;
+}
+
+
+.saved-note-content ol li::marker {
+    color: #1a73e8;
+
+    font-weight: 600;
+}
+
+
+.saved-note-content code {
+    padding:
+        2px 5px;
+
+    background: #eef1f5;
+
+    color: #c7254e;
+
+    border-radius: 4px;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 13px;
+}
+
+
+.saved-note-content .code-block {
+    margin:
+        10px 0 14px 0;
+
+    padding: 12px;
+
+    background: #1e1e1e;
+
+    color: #f8f8f2;
+
+    border-radius: 7px;
+
+    overflow-x: auto;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+.saved-note-content .code-block code {
+    padding: 0;
+
+    background: transparent;
+
+    color: #f8f8f2;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   SAVED NOTE DATE
+   ===================================================== */
+
+.saved-note-date {
+    margin-top: 8px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   DELETE NOTE
+   ===================================================== */
+
+.delete-note {
+    position: absolute;
+
+    top: 8px;
+
+    right: 8px;
+
+    padding:
+        5px 8px;
+
+    background: #dc2626;
+
+    font-size: 11px;
+}
+
+
+.delete-note:hover {
+    background: #b91c1c;
+}
+
+
+/* =====================================================
+   CLEAR ALL
+   ===================================================== */
+
+.clear-button {
+    padding:
+        6px 10px;
+
+    background: #dc2626;
+
+    font-size: 11px;
+}
+
+
+.clear-button:hover {
+    background: #b91c1c;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.empty-result {
+    padding: 15px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+/* =====================================================
+   SAVED NOTES HEADER ACTIONS
+   ===================================================== */
+
+.notes-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* =====================================================
+   DOWNLOAD PDF BUTTON
+   ===================================================== */
+
+/* =====================================================
+   DOWNLOAD PDF BUTTON
+   ===================================================== */
+
+.download-button {
+    padding: 6px 10px;
+    background: #1a73e8;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.download-button:hover {
+    background: #1557b0;
+}
+
+.download-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =====================================================
+   SAVED NOTE SOURCE
+   ===================================================== */
+
+.saved-note-source {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6b7280;
+    word-break: break-all;
+}
+
+.saved-note-source a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.saved-note-source a:hover {
+    text-decoration: underline;
+}
